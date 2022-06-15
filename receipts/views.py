@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from receipts.models import Receipt
+from receipts.models import Account, ExpenseCategory, Receipt
 
 # Create your views here.
 
@@ -12,7 +12,7 @@ class ReceiptListView(LoginRequiredMixin, ListView):
     model = Receipt
     template_name = "receipts/list.html"
 
-    def get_query_set(self):
+    def get_queryset(self):
         return Receipt.objects.filter(purchaser=self.request.user)
         # this filters the Receipt objects where purchaser equals the logged in user
         # makes sense that it's purchaser because that's defined in our model, not
@@ -37,3 +37,19 @@ class ReceiptCreateView(LoginRequiredMixin, CreateView):
         receipt.purchaser = self.request.user
         receipt.save()
         return redirect("home")
+
+
+class ExpenseCategoryListView(LoginRequiredMixin, ListView):
+    model = ExpenseCategory
+    template_name = "expense_categories/list.html"
+
+    def get_queryset(self):
+        return ExpenseCategory.objects.filter(owner=self.request.user)
+
+
+class AccountListView(LoginRequiredMixin, ListView):
+    model = Account
+    template_name = "accounts/list.html"
+
+    def get_queryset(self):
+        return Account.objects.filter(owner=self.request.user)
