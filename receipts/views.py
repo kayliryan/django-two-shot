@@ -13,3 +13,6 @@ class ReceiptListView(LoginRequiredMixin, ListView):
     def get_query_set(self):
         return Receipt.objects.filter(purchaser=self.request.user)
         # this filters the Receipt objects where purchaser equals the logged in user
+        # makes sense that it's purchaser because that's defined in our model, not
+        # owner or user. .... the .user comes from the USER_MODEL so it's defined
+        # by django in the black magic, not by us
