@@ -69,3 +69,22 @@ class ExpenseCategoryCreateView(LoginRequiredMixin, CreateView):
         item.owner = self.request.user
         item.save()
         return redirect("list_expensecategories")
+
+
+class AccountCreateView(LoginRequiredMixin, CreateView):
+    model = Account
+    template_name = "accounts/create.html"
+    fields = [
+        "name",
+        "number",
+    ]
+
+    def form_valid(self, form):
+        item = form.save(commit=False)
+        item.owner = self.request.user
+        # we have to get owner from somewhere since it's specified in our
+        # model and we didn't make the user input it
+        # that's why we have to do this function form_valid, to stop it from saving
+        # add something to the owner field, and then save it again
+        item.save()
+        return redirect("list_accounts")
