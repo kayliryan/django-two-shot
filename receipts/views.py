@@ -33,7 +33,9 @@ class ReceiptCreateView(LoginRequiredMixin, CreateView):
     ]
 
     def form_valid(self, form):
-        receipt = form.save(commit=False)
+        receipt = form.save(
+            commit=False
+        )  # receipt could be replaced with item throughout
         receipt.purchaser = self.request.user
         receipt.save()
         return redirect("home")
@@ -53,3 +55,17 @@ class AccountListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Account.objects.filter(owner=self.request.user)
+
+
+class ExpenseCategoryCreateView(LoginRequiredMixin, CreateView):
+    model = ExpenseCategory
+    template_name = "expense_categories/create.html"
+    fields = [
+        "name",
+    ]
+
+    def form_valid(self, form):
+        item = form.save(commit=False)
+        item.owner = self.request.user
+        item.save()
+        return redirect("list_expensecategories")
